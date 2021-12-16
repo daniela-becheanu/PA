@@ -1,0 +1,70 @@
+Becheanu Daniela Elena - 324CA
+Tema2 - Proiectarea Algoritmilor
+
+* poduri.cpp:
+	* se declara variabilele, se deschid fisierul de input si de output si se
+		citesc variabilele date in fisierul de intrare
+	* se declara o matrice de dimensiune N x M in care se stocheaza tipul
+		fiecarui pod (sau "." daca nu este pod)
+	* aceasta problema consta intr-un BFS, nodul sursa fiind pozitia in care se
+		afla Gigel initial; BFS-ul consta in adaugarea in coada a pozitiilor in
+		care se poate ajunge din nodul curent, oprindu-se in momentul in care
+		se ajunge la marginea matricii si Gigel se afla pe un pod din care
+		poate iesi din matrice (adica poate ajunge la mal), moment in care se
+		afiseaza adancimea la care s-a ajuns, care este numarul minim de poduri
+		pe care Gigel trebuie sa le traverseze
+	* daca nu se poate iesi din matrice, atunci se returneaza -1
+	* Complexitate: O(N * M)
+
+* adrese.cpp:
+	* struct person: fiecare persoana citita din fisierul de intrare va fi
+		stocata intr-o astfel de structura, impreuna cu mail-urile acesteia
+		intr-un set de persoane, care contine persoanele exact cum sunt date
+		in input (am folosit set pentru ca elementele sa fie direct sortate pe
+		masura ce se adauga mail-uri si pentru a nu exista duplicate)
+	* cmp_people: functie care va sorta un vector de persoane ina sa fel incat
+		sa fie afisate in ordinea ceruta in enunt
+	* main:
+		* se citeste numarul de persoane si se stocheaza persoanele din
+			fisierul de input in vectorul people
+		* se verifica existenta a doua persoane care sa aiba un email comun
+		* in cazul in care se gasesc doua persoane care sa aiba un email comun,
+			se stabileste care dintre ele are numele mai mic din punct de
+			vedere lexicografic, iar, in set-ul corespunzator celui mai mic
+			nume se vor adauga celelalte mail-uri, dupa care se sterge din
+			vectorul de persoane persoana cu numele mai mare
+		* in final, ramanem cu persoanele distincte in vectorul people, dar
+			trebuie sortate, dupa care sunt scrise in fisierul de output in
+			modul precizat in enunt
+	* Complexitate: O(N^2 * K * logN)
+
+* lego.cpp:
+	* consec: functie care calculeaza numarul de elemente consecutive egale cu
+		1
+	* comb_generator:
+		* functie care genereaza toate combinarile cu numere de la 1 la K
+			(stocate in vectorul v) de cate N elemente
+		* https://www.geeksforgeeks.org/print-all-possible-combinations-of-r-elements-in-a-given-array-of-size-n/
+			(m-am inspirat din acest link)
+	* main:
+		* se citesc de la tastatura K, N si T, dupa care se formeaza vectorul
+			din care trebuie formate combinarile (cu elemente de la 1 la K),
+			care sa contina elementul 1 (corespunzator hint-ului din enunt)
+		* apoi, pentru fiecare combinare, se creeaza o matrice in care se
+			foloseste programare dinamica (problema asemanatoare cu problema
+			rucsacului)
+		* fiecare matrice va avea o recurenta de tipul:
+			dp[i][j] = 1, daca se poate obtine suma j cu i numere (numerele vor
+						  fi din combinarea curenta (v))
+					   0, altfel
+			* max_sum va fi suma maxima la care se poate ajunge folosind
+				permutarea curenta (T * v[N - 1], deoarece v[N - 1] este cel
+				mai mare numar din permutarea v, elementele in fiecare
+				permutare fiind in ordine crescatoare)
+			* pe ultima linie a matricei se va afla 1 pe coloanele
+				corespunzatoare sumelor care se pot forma, de aceea, trebuie sa
+				numaram cate elemente egale cu 1 consecutive sunt, folosind
+				functia consec, salvandu-se intr-o variabila numarul maxim si
+				combinarea care ii corespunde, pentru a putea fi afisate la
+				final (maxim, max_comb)
+	* Complexitate: O((combinari de K luate cate N) * K * N * T^2)

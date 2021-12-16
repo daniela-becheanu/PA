@@ -1,0 +1,163 @@
+Becheanu Daniela Elena - 324CA
+Tema1 - Proiectarea Alogirtmilor
+
+* crypto.c:
+    * power_comparator:
+        * function that takes as parameters two pairs and compares them
+            considering the first element of each pair (the power)
+    * main:
+        * the computers vector contains pairs of the computing power and the
+            cost of the upgrade
+        * the input and output files are opened and the vector populated with
+            (power, upgrade) pairs
+        * the computers vector is sorted using the sort function that takes as
+            parameter the power_comparator function implemented earlier,
+            sorting the computers by their computing power
+                
+    * solve:
+        * min_power is the minimum power and it is, at the beginning, the lowest power
+            (the power of the first computer)
+        * considering that the vector is sorted, its elements being in
+            ascending order considering their computing power, the idea is to
+            parse through the vector, and, when the power of computers[i] is
+            lower than the power of computer[i + 1]
+            (computers[i].first < computers[i + 1].first)
+            it means that it needs to be checked if the computers from index 0
+            to index i can be upgraded
+        * the sum of the upgrade prices of the computers until step i is stored
+            in the sum variable, which will be helpful to find the current
+            possible upgrade:
+                * if B / sum == 0, then the computers can't be upgraded anymore
+                * otherwise, it is checked if we make all the upgrades of the
+                    computers from 0 to i to be equal to the upgrade of
+                    computers[i + 1] (add represents the units of power added)
+                * add cand be either the difference between the powers of
+                    computers[i] and computers[i + 1], or the number of units
+                    obtained from the division of B and sum (the lower one is
+                    chosen)
+        * the minimum power obtained is returned
+    * COMPLEXITATE: O(N * logN) pentru sortat si O(N) parcurgerea => O(N*logN)
+
+* stocks.cpp:
+    * class stock is used, which has as fields the current value, the minimum
+        value and the maximum value
+    * main:
+        * the input and output files are opened and the N, B and L variables
+            are read from the input file, then the vector is populated with
+            stock elements
+        * a tridimensional matrix is used for dynamic programming (dp, with
+            size N x B x L), where
+            dp[i][j][k] = the maximum profit that Gigel can obtain considering
+                          the first i actions, j (the current amount of money)
+                          and k as the maximum current loss
+        * the matrix is initialised with 0, then it is populated this way:
+            * dp[i][j][j] is equal to the previous value (dp[i - 1][j][k])
+                if we can't take into consideration adding the current action
+                to the bought actions
+            * otherwhise, we check if it is more profitable to add the current
+                action to the bought ones, or to keep the previous value
+        * the result is dp[N][B][L]
+    * COMPLEXITATE: O(N * B * L)
+
+* valley.cpp:
+    * main:
+        * the input and output files are opened, the number of mountains is
+            stored int the N variable and the heights of all N hills are stored
+            in the heigths vector
+        * last_min_post represents the index of the mountain with the minimum
+            height (if there are more mountains with this height, only the last
+            index is stored)
+        * the result is the return value of the solve function
+    * solve:
+        * hours is the minimum number of hours that Gigel spends excavating the
+            mountains; it is, initially, 0
+        * the idea of this function is to create a valley by making sure that
+            all the mountains to the first one found that has the lowet height
+            to have heights in descending order, and all the mountains after the
+            last one that has the lowest height to be in ascending order (if
+            there are more mountains with the minimum height, between the first
+            and the last there must be a constant height equal to the minimum
+            height)
+        * if the last mountain with the minimum height is the first mountain,
+            considering the fact that the problem asks for no ramp, then the
+            second mountain must have the same height as the first one, that is
+            why the last_min_pos is updated and the hours variable is modified
+        * similar for the case where the last_min_pos is the last element of
+            the vector, but this time the last_min_pos variable does not need
+            to be updated
+        * each time, it is checked that the current height processed is lower
+            than the last (last_max variable is used to store the last height)
+        * last_max is initialised with the first element of the vector and
+            updated if needed
+        * then, we go through the heights vector from index 0 to
+            last_min_pos - 1 and update the hours variable to make sure the
+            heights are in descending order; if we meet a mountain with the
+            height equal to the lowest height, we update the hours variable so
+            that between the first minimum height and last minimum height, all
+            the hieghts are minimum to the lowest one
+        * last_max is updated to the last height of the vector
+        * similar for the suffix part, but this time we just need to make sure
+            that the heights are in ascending order (I started from the end to
+            the last_min_pos, and, having them backwards, they need to be in
+            ascending order); hours variable is updated to satisfy the
+            condition
+    * COMPLEXITATE: O(N)
+
+* ridge.cpp:
+    * the mountains vector cointains pair of height and price
+    * dp[i][j] = the current minimum cost for the first i mountains and
+        excavating the i-th mounain with j units (0 <= i <= N, 0 <= j <=2)
+        (the range for j was chosen considering the fact that there is no need
+        to excavate more than 2 units from a mountain in order to maintain the
+        propriety given - not to have adjacent mountains with the same height)
+    * base case: dp[0][i] = the multiplication of the number of units and the
+                            cost of excavating one unit
+    * there are special cases, where the difference between the heights of
+        mountains[i - 1] and mountains[i] is 2, 1, 0, -1 or 2 
+        * case 2:
+            * dp[i][0]: we can't take the cost of excavating mountains[i - 1]
+                with 2 units because, in this case, the heights of
+                mountains[i - 1] and mountains[i] will be equal (because we
+                don't excavate any unit from mountains[i])
+            * dp[i][1], dp[i][2]: we can take into consideration excavating
+                mountains[i] with all the 3 options, taking care to ad the cost
+                of the excavation
+        * case 1, 0, -1, -2 are treated similarily
+        * default: for dp[i][0], dp[i][1] and dp[i][2] we take into
+            consideration all three cases of excavation
+        * if the height of the current mountain is 0, then we can't excavate 1
+            or 2 units, that is why the values of dp[i][1] and dp[i][2] are set
+            to LONG_LONG_MAX (because in the future it is always chosen the
+            minimum value, this one will never be chosen); similar when the
+            height is equal to 1
+        * the result is the minimum value of dp[N - 1][0], dp[N - 1][1]) and
+            dp[N - 1][2]
+    * COMPLEXITATE: O(N)
+
+* trigigel.cpp:
+    * multiply_matrix, power_matrix:
+        * functions used for multiplying two matrices and obtaining the result
+            of A^n, where A is a matrix (logarithmic exponentiation of matrices
+            using Divide et Impera - Lab 2, 4)
+        * solve:
+            * dp[i] = the number of ways to choose a set of indices so that the
+                    subset
+            * I started from the idea that the recurrence is:
+                dp[i] = dp[i - 1] + dp[i - 3] + 3
+            * S_i = (dp[i],
+                    dp[i - 1],
+                    dp[i - 2],
+                    3)
+            * trying to write S_i as C * S_i-1, we obtain:
+                C = {{1, 0, 1, 1},
+                    {1, 0, 0, 0},
+                    {0, 1, 0, 0},
+                    {0, 0, 0, 1}}
+            * (dp[N],            (dp[N - 1],                   (dp[2],
+            dp[N - 1],  = C *  dp[N - 2], = ... = C^(N-2) *  dp[1], 
+            dp[N - 2],         dp[N - 3],                    dp[0],
+            3)                 3)                            3)
+            * using the C matrix and the base cases dp[0] = 0, dp[1] = 1 and
+                dp[2] = 6 and considering the fact that dp[n] is on the first
+                column of the resulting matrix, we obtain the solution
+    * COMPLEXITATE: O(logN)
